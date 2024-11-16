@@ -76,4 +76,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact
 
-For any inquiries or support, please contact us at [email@example.com](mailto:lesterlucasit@hotmail.com). You can also connect with us on [LinkedIn](https://www.linkedin.com/in/lester-cerioli-83300a81/).
+For any inquiries or support, please contact us at [lesterlucasit@hotmail.com](mailto:lesterlucasit@hotmail.com). You can also connect with us on [LinkedIn](https://www.linkedin.com/in/lester-cerioli-83300a81/).
