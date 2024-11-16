@@ -16,6 +16,7 @@ add_executable(CPlusApplication
     src/api_controller.cpp 
     src/camera.cpp 
     src/utils.cpp
+    src/services/capture_service.cpp
 )
 
 target_link_libraries(CPlusApplication ${cpprest_LIBRARIES} ${OpenCV_LIBS})

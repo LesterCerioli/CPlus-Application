@@ -1,33 +1,32 @@
 #include "api_controller.h"
-#include <opencv2/opencv.hpp>
 #include <iostream>
+#include <cpprest/json.h>
 
-using namespace cv;
+using namespace web;
+using namespace web::http;
+using namespace web::http::experimental::listener;
 
-ApiController::ApiController() {
+ApiController::ApiController(std::shared_ptr<ICaptureService> captureService) 
+    : captureService(captureService) {
     listener = http_listener(U("http://localhost:8080"));
     listener.support(methods::POST, std::bind(&ApiController::handle_post, this, std::placeholders::_1));
     listener.support(methods::GET, std::bind(&ApiController::handle_get, this, std::placeholders::_1));
 }
 
 void ApiController::handle_post(http_request request) {
-    request.extract_json().then([&](json::value requestBody) {
-        
+    request.extract_json().then([this, request](json::value requestBody) {
         if (!requestBody.has_field(U("photo_data"))) {
             send_response(request, status_codes::BadRequest, U("Missing 'photo_data' field."));
             return;
         }
 
+        std::string data = requestBody[U("photo_data")].as_string();
+        auto futureResult = captureService->capturePhotoAsync(data);
+
         try {
+            auto result = futureResult.get();
             auto response = json::value::object();
-
-            
-            Mat image = Mat::zeros(480, 640, CV_8UC3);
-            putText(image, "PhotoAppBackend Capture", Point(50, 240), FONT_HERSHEY_SIMPLEX, 1, Scalar(255, 255, 255), 2);
-
-            imwrite("captured_photo.jpg", image);
-
-            response[U("message")] = json::value::string(U("Photo captured successfully."));
+            response[U("message")] = json::value::string(U(result));
             request.reply(status_codes::Created, response); // 201 Created
         } catch (const std::exception& e) {
             send_response(request, status_codes::InternalError, U("Internal server error occurred."));
