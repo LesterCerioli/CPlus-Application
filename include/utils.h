@@ -4,6 +4,6 @@
 #include <string>
 #include <ctime>
 
-stg::string getCurrentDateTime();
+std::string getCurrentDateTime();
 
 #endif
